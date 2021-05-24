@@ -110,6 +110,16 @@ func (c *connection) clientHandshake(dialAddress string, config *ClientConfig) e
 	}
 
 	c.sessionID = c.transport.getSessionID()
+
+	stop, err := config.DoCallback(CallbackTypePreAuth, c.transport.readPacket, c.transport.writePacket)
+	if err != nil {
+		return err
+	}
+
+	if stop {
+		return nil
+	}
+
 	return c.clientAuthenticate(config)
 }
 
@@ -220,6 +230,9 @@ type ClientConfig struct {
 	// simplistic display on Stderr.
 	BannerCallback BannerCallback
 
+	// Callback can be called at any time during the SSH connection
+	Callback Callback
+
 	// ClientVersion contains the version identification string that will
 	// be used for the connection. If empty, a reasonable default is used.
 	ClientVersion string
@@ -235,6 +248,33 @@ type ClientConfig struct {
 	//
 	// A Timeout of zero means no timeout.
 	Timeout time.Duration
+}
+
+// Callback is a callback function that can be called at any point in the SSH connection
+// returning false will return the function that executed the callback
+type Callback func(CallbackType, ReadFunc, WriteFunc) (stop bool, err error)
+
+// ReadFunc is a func that reads SSH packets
+type ReadFunc func() ([]byte, error)
+
+// WriteFunc is a func that writes SSH packets
+type WriteFunc func(packet []byte) error
+
+// CallbackType represents the type of Callback that is being performed
+type CallbackType int
+
+const (
+	// CallbackTypePreAuth is called before the SSH client attempts to authenticate
+	CallbackTypePreAuth CallbackType = iota
+)
+
+// DoCallback performs the global callback function or ignores it if none was given
+func (c *ClientConfig) DoCallback(t CallbackType, read ReadFunc, write WriteFunc) (stop bool, err error) {
+	if c.Callback == nil {
+		return false, nil
+	}
+
+	return c.Callback(t, read, write)
 }
 
 // InsecureIgnoreHostKey returns a function that can be used for
