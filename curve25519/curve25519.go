@@ -5,13 +5,13 @@
 // Package curve25519 provides an implementation of the X25519 function, which
 // performs scalar multiplication on the elliptic curve known as Curve25519.
 // See RFC 7748.
-package curve25519 // import "golang.org/x/crypto/curve25519"
+package curve25519 // import "github.com/karelorigin/crypto/curve25519"
 
 import (
 	"crypto/subtle"
 	"fmt"
 
-	"golang.org/x/crypto/curve25519/internal/field"
+	"github.com/karelorigin/crypto/curve25519/internal/field"
 )
 
 // ScalarMult sets dst to the product scalar * point.

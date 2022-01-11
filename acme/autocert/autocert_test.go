@@ -31,8 +31,8 @@ import (
 	"testing"
 	"time"
 
-	"golang.org/x/crypto/acme"
-	"golang.org/x/crypto/acme/autocert/internal/acmetest"
+	"github.com/karelorigin/crypto/acme"
+	"github.com/karelorigin/crypto/acme/autocert/internal/acmetest"
 )
 
 var (

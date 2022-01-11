@@ -9,7 +9,7 @@
 //
 // References:
 //  [PROTOCOL.agent]: https://tools.ietf.org/html/draft-miller-ssh-agent-00
-package agent // import "golang.org/x/crypto/ssh/agent"
+package agent // import "github.com/karelorigin/crypto/ssh/agent"
 
 import (
 	"bytes"
@@ -26,8 +26,9 @@ import (
 	"sync"
 
 	"crypto"
-	"golang.org/x/crypto/ed25519"
-	"golang.org/x/crypto/ssh"
+
+	"github.com/karelorigin/crypto/ed25519"
+	"github.com/karelorigin/crypto/ssh"
 )
 
 // SignatureFlags represent additional flags that can be passed to the signature
